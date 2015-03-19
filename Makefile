@@ -11,5 +11,5 @@ solution: lex.yy.c
 	$(CC) -o $@ lex.yy.c $(CFLAGS)
 
 clean: 
-	find . -type f -not \( -name "solution.l" -o -name "sample.pas" -o -name "task5.pas" -o -name "Makefile" -o -name "README.md" \) | xargs rm -f
+	find . -type f -not \( -name "solution.l" -o -name "sampleWithModula2Comments.pas" -o -name "Makefile" -o -name "README.md" \) | xargs rm -f
 
