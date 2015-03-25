@@ -1,9 +1,15 @@
+%x COMMENT
 %{
 #include <stdio.h>
 
 int lexicalErrors = 0;
 char output[] = "Line %3u: %20s (%s)\n";
 FILE *genFile;
+
+// For modula 2 comments
+int comment_nesting = 0;
+int total_number_of_comments = 0;
+int max_comment_nesting = 0;
 
 char *convertToUpper(char *text);
 void substring(char s[], char sub[], int p, int l);
@@ -44,7 +50,6 @@ Y [yY]
 Z [zZ]
 
 %%
-
     /* Keywords */
 {P}{R}{O}{G}{R}{A}{M}|{V}{A}{R}|{I}{N}{T}{E}{G}{E}{R}|{A}{R}{R}{A}{Y}|{O}{F}|{R}{E}{A}{L}|{B}{E}{G}{I}{N}|{W}{H}{I}{L}{E}|{D}{O}|{I}{F}|{T}{H}{E}{N}|{E}{L}{S}{E}|{E}{N}{D}|{F}{O}{R}|{T}{O}|{C}{O}{N}{S}{T} {
   printf(output, yylineno, yytext, "keyword");
@@ -64,13 +69,37 @@ Z [zZ]
 
     /* Garbage */
 "{"[^}\n]*"}"                 { 
+                                total_number_of_comments++;
                                 int length = strlen(yytext)-2;
                                 char sub[length];
                                 substring(yytext, sub, 2, length); 
-
                                 fprintf(genFile, "(*%s*)", sub);
                               }
 
+    /* Modula 2 comments */
+"(*"                          { 
+                                BEGIN(COMMENT);
+                                ++comment_nesting;
+                                if(comment_nesting > max_comment_nesting) {
+                                  max_comment_nesting = comment_nesting;
+                                }
+                              }
+<COMMENT>[^*)]                /* Eat non-comment delimiters */
+<COMMENT>"(*"                 { 
+                                ++comment_nesting;
+                                if(comment_nesting > max_comment_nesting) {
+                                  max_comment_nesting = comment_nesting;
+                                }
+                              }
+<COMMENT>"*)"                 { 
+                                total_number_of_comments++; 
+                                if(--comment_nesting == 0) {
+                                  BEGIN(INITIAL);
+                                }
+                              }
+<COMMENT>[*)]                 /* Eat a ) or * if it doesn't match comment sequence */
+
+    /* Whitespaces */
 {WHITESPACE}+                 fprintf(genFile, " ");
 
     /* Lexical errors */
@@ -95,7 +124,9 @@ main(int argc, char **argv) {
 
   yylex();
   
-  printf("\n%sThere is/are %d lexical error/s in the programme\n%s", stars, lexicalErrors, stars);
+  printf("\n%sThere is/are %d lexical error/s in the programme\n", stars, lexicalErrors);
+  printf("There are %d comments in total\n", total_number_of_comments);
+  printf("The maximum nested comment level is %d\n%s", max_comment_nesting, stars); 
   fclose(genFile);
   return 0;
 }

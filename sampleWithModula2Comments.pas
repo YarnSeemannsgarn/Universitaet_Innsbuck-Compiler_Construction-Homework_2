@@ -1,5 +1,5 @@
 
-(* This is (* a wrong nested Modula-2 comment *)
+(* This is (* a nested Modula-2 *) comment *)
 
 
 program minipas;
@@ -9,7 +9,7 @@ program minipas;
 
   begin
   
-    (* This (* is a *) correct Modula-2 comment *)
+    (* This (* is a *) Modula-2 comment *)
     read(x, y);
     while x * y <> 0 do
     begin
@@ -22,7 +22,7 @@ program minipas;
     else write(x);
 
 
-    (* This is (* a wrong (* nested Modula-2 *) comment *)
+    (* This is (* a (* nested *) Modula-2 *) comment *)
     read(x);
     y := 1;
     i := 2;
@@ -59,7 +59,7 @@ program minipas;
     write(b);
 
 
-    { Sort an array of x elements }
+    (* Comment *)
     read(x);
     for i := 1 to x do
       read(a[i]);
