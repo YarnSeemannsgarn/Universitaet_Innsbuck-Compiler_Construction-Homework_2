@@ -14,20 +14,25 @@
 <statement-list>		-> <statement> | <statement-list> <statement>
 <statement>			-> <procedure-call> | <while-statement> | <if-statement> | <for-statment> | <variable-assignment> | <begin-end-statement> | ɛ
 
-<procedure-call> 		-> read(<variable-id-list>); | write(<variable-id-list>);
+<procedure-call> 		-> read(<variable-list>); | write(<variable-list>);
+
 <while-statement>		-> while <expression> do <statement>
 <if-statement>			-> if <expression> then <statement> <else-part>
 <else-part>			-> else <statement> | ɛ
 <for-statement>			-> for <identifier> := <expression> to <expression> do <statement>
-<variable-assignment>		-> <variable> := <expression>
+<variable-assignment>		-> <variable> := <expression>;
 <begin-end-statement>		-> begin <statement-list> end;
 
+<variable-list>			-> <variable> | <variable-list>, <variable>
 <variable>			-> <identifier> | <identifier>[<expression>]
-<identifier>			-> <letter> <rest-identifier>
+<identifier>			-> <small-letter> <rest-identifier>
 <rest-identifier>		-> <digit-or-letter> <rest-identifier> | ɛ
 <digit-or-letter>		-> <letter> | <digit>
+<number>			-> <digit> | <number> <digit>
 <digit>				-> 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 0
-<letter>			-> a | A | b | B | c | C | d | D | e | E | f | F | g | G | h | H | i | I | j | J | k | K | l | L | m | M | n | N | o | O | p | P | q | Q | r | R | s | S | t | T | u | U | v | V | w | W | x | X | y | Y | z | Z
+<letter>			-> <small-letter> | <big-letter>
+<small-letter>			-> a | b | c | d | e | f | g | h | i | j | k | l | m | n | o | p | q | r | s | t | u | v | w | x | y | z
+<big-letter>			-> A | B | C | D | E | F | G | H | I | J | K | L | M | N | O | P | Q | R | S | T | U | V | W | X | Y | Z
 
 <expression>			-> <simple-expression> | <simple-expression> <relational-operator> <simple-expression>
 <relational-operator>		-> = | <> | < | <= | >= | >

@@ -12,3 +12,8 @@ Afterwards you can run the progamme (solution) with an input file and an output 
 If you want to clean up just do:
 
       $ make clean
+
+Where is solution for task 2
+============================
+
+You can find the context-free grammar for Mini-Pascal language in task2.txt.
